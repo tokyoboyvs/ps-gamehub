@@ -43,6 +43,7 @@ function Get-RobCoMods {
             $_description = 'No description.'
             $_author = 'unknown'
             $_entryPoint = 'run.ps1'
+            $_enabled = $true
 
             if ($null -ne ($manifest.PSObject.Properties['name'])) {
                 $_name = $manifest.name
@@ -64,11 +65,16 @@ function Get-RobCoMods {
                 $_entryPoint = $manifest.entryPoint
             }
 
+            if ($null -ne ($manifest.PSObject.Properties['enabled'])) {
+                $_enabled = [bool]$manifest.enabled
+            }
+
             [pscustomobject]@{
                 Name = $_name
                 Version = $_version
                 Description = $_description
                 Author = $_author
+                Enabled = $_enabled
                 Path = $folder.FullName
                 RunPath = (Join-Path $folder.FullName $_entryPoint)
             }
@@ -78,11 +84,12 @@ function Get-RobCoMods {
                 Version = 'unknown'
                 Description = 'No description'
                 Author = 'unknown'
+                Enabled = $true
                 Path = $folder.FullName
                 RunPath = (Join-Path $folder.FullName 'run.ps1')
             }
         }
     }
 
-    return @($mods)
+    return @($mods | Where-Object { $_.Enabled })
 }
