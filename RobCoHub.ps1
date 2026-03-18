@@ -10,53 +10,65 @@ $configPath = Join-Path $script:RootPath 'config.json'
 $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
 
 Initialize-RobCoStructure -RootPath $script:RootPath
-Set-RobCoTheme -Config $config
-Show-RobCoBanner -AppName $config.appName
 
-$modsPath = Join-Path $script:RootPath 'assets\mods'
-$mods = @(Get-RobCoMods -ModsPath $modsPath)
+while ($true) {
+    Set-RobCoTheme -Config $config
+    Show-RobCoBanner -AppName $config.appName
 
-Write-Host ('Mods detected : {0}' -f $mods.Count)
-Write-Host ''
+    $modsPath = Join-Path $script:RootPath 'assets\mods'
+    $mods = @(Get-RobCoMods -ModsPath $modsPath)
 
-if ($mods.Count -eq 0) {
-    Write-Host 'No modules installed.'
+    Write-Host ('Mods detected : {0}' -f $mods.Count)
     Write-Host ''
-    Read-Host 'Press Enter to exit'
-    return
-}
 
-for ($i = 0; $i -lt $mods.Count; $i++) {
-    $index = $i + 1
-    $mod = $mods[$i]
-    Write-Host ('[{0}] {1} [{2}]' -f $index, $mod.Name, $mod.Version)
-}
+    if ($mods.Count -eq 0) {
+        Write-Host 'No modules installed.'
+        Write-Host ''
+        $emptyAction = Read-Host 'Press Enter to refresh or type Q to quit'
 
-Write-Host ''
-$selection = Read-Host 'Select a module number'
-$selectedIndex = 0
+        if ($emptyAction -eq 'q' -or $emptyAction -eq 'Q') {
+            break
+        }
 
-if (-not [int]::TryParse($selection, [ref]$selectedIndex)) {
+        continue
+    }
+
+    for ($i = 0; $i -lt $mods.Count; $i++) {
+        $index = $i + 1
+        $mod = $mods[$i]
+        Write-Host ('[{0}] {1} [{2}]' -f $index, $mod.Name, $mod.Version)
+    }
+
     Write-Host ''
-    Write-Host 'Invalid selection.'
-    Read-Host 'Press Enter to exit'
-    return
-}
-
-if ($selectedIndex -lt 1 -or $selectedIndex -gt $mods.Count) {
+    Write-Host '[Q] Quit'
     Write-Host ''
-    Write-Host 'Selection out of range.'
-    Read-Host 'Press Enter to exit'
-    return
+
+    $selection = Read-Host 'Select a module number'
+    $selectedIndex = 0
+
+    if ($selection -eq 'q' -or $selection -eq 'Q') {
+        break
+    }
+
+    if (-not [int]::TryParse($selection, [ref]$selectedIndex)) {
+        Write-Host ''
+        Write-Host 'Invalid selection. Press Enter to continue'
+        continue
+    }
+
+    if ($selectedIndex -lt 1 -or $selectedIndex -gt $mods.Count) {
+        Write-Host ''
+        Write-Host 'Selection out of range. Press Enter to continue'
+        continue
+    }
+
+    $selectedMod = $mods[$selectedIndex - 1]
+
+    if (-not (Test-Path -LiteralPath $selectedMod.RunPath)) {
+        Write-Host ''
+        Write-Host 'Module launcher not found. Press Enter to continue'
+        continue
+    }
+
+    & $selectedMod.RunPath
 }
-
-$selectedMod = $mods[$selectedIndex - 1]
-
-if (-not (Test-Path -LiteralPath $selectedMod.RunPath)) {
-    Write-Host ''
-    Write-Host 'Module launcher not found.'
-    Read-Host 'Press Enter to exit'
-    return
-}
-
-& $selectedMod.RunPath
