@@ -54,13 +54,13 @@ while ($true) {
 
     if (-not [int]::TryParse($selection, [ref]$selectedIndex)) {
         Write-Host ''
-        Write-Host 'Invalid selection. Press Enter to continue'
+        Read-Host 'Invalid selection. Press Enter to continue'
         continue
     }
 
     if ($selectedIndex -lt 1 -or $selectedIndex -gt $mods.Count) {
         Write-Host ''
-        Write-Host 'Selection out of range. Press Enter to continue'
+        Read-Host 'Selection out of range. Press Enter to continue'
         continue
     }
 
@@ -68,7 +68,7 @@ while ($true) {
 
     if (-not (Test-Path -LiteralPath $selectedMod.RunPath)) {
         Write-Host ''
-        Write-Host 'Module launcher not found. Press Enter to continue'
+        Read-Host 'Module launcher not found. Press Enter to continue'
         continue
     }
 
