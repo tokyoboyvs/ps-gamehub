@@ -1,0 +1,8 @@
+{
+  "name": "Nothing Here",
+  "version": "0.1.0",
+  "description": "Mod de test.",
+  "author": "TokyoBoyVS",
+  "entryPoint": "run.ps1",
+  "enabled": true
+}

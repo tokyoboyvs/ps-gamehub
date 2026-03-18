@@ -91,5 +91,9 @@ function Get-RobCoMods {
         }
     }
 
-    return @($mods | Where-Object { $_.Enabled })
+    return @(
+        $mods |
+        Where-Object { $_.Enabled } |
+        Sort-Object Name
+    )
 }
