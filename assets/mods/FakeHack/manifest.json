@@ -2,5 +2,6 @@
   "name": "FakeHack",
   "version": "0.1.0",
   "description": "Simulateur de piratage RobCo.",
-  "author": "TokyoBoyVS"
+  "author": "TokyoBoyVS",
+  "entryPoint": "run.ps1"
 }
