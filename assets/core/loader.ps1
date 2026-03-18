@@ -38,9 +38,32 @@ function Get-RobCoMods {
         if (Test-Path -LiteralPath $manifestPath) {
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 
+            $name = 'unknown'
+            $version = 'unknown'
+            $description = 'No description.'
+            $author = 'unknown'
+
+            if ($null -ne ($manifest.PSObject.Properties['name'])) {
+                $_name = $manifest.name
+            }
+
+            if ($null -ne ($manifest.PSObject.Properties['version'])) {
+                $_version = $manifest.version
+            }
+
+            if ($null -ne ($manifest.PSObject.Properties['description'])) {
+                $_description = $manifest.description
+            }
+
+            if ($null -ne ($manifest.PSObject.Properties['author'])) {
+                $_author = $manifest.author
+            }
+
             [pscustomobject]@{
-                Name = $manifest.name
-                Version = $manifest.version
+                Name = $_name
+                Version = $_version
+                Description = $_description
+                Author = $_author
                 Path = $folder.FullName
                 RunPath = (Join-Path $folder.FullName 'run.ps1')
             }
@@ -48,6 +71,8 @@ function Get-RobCoMods {
             [pscustomobject]@{
                 Name = $folder.Name
                 Version = 'unknown'
+                Description = 'No description'
+                Author = 'unknown'
                 Path = $folder.FullName
                 RunPath = (Join-Path $folder.FullName 'run.ps1')
             }
