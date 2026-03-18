@@ -93,7 +93,7 @@ function Get-RobCoMods {
 
     return @(
         $mods |
-        Where-Object { $_.Enabled } |
+        Where-Object { $_.Enabled -and (Test-Path -LiteralPath $_.RunPath) } |
         Sort-Object Name
     )
 }
