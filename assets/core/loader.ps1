@@ -42,12 +42,14 @@ function Get-RobCoMods {
                 Name = $manifest.name
                 Version = $manifest.version
                 Path = $folder.FullName
+                RunPath = (Join-Path $folder.FullName 'run.ps1')
             }
         } else {
-            [PSCustomObject]@{
+            [pscustomobject]@{
                 Name = $folder.Name
                 Version = 'unknown'
                 Path = $folder.FullName
+                RunPath = (Join-Path $folder.FullName 'run.ps1')
             }
         }
     }
