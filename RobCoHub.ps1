@@ -38,6 +38,7 @@ while ($true) {
         $mod = $mods[$i]
         Write-Host ('[{0}] {1} [{2}]' -f $index, $mod.Name, $mod.Version)
         Write-Host ('    {0}' -f $mod.Description)
+        Write-Host ('    by {0}' -f $mod.Author)
     }
 
     Write-Host ''
